@@ -68,9 +68,10 @@ export default function ProblemScene() {
               viewport={{ once: true }}
             >
               <p className="text-cartan-white/70 italic text-sm leading-relaxed">
-                &ldquo;A better understanding of individual anatomy, alignment, and ligament balancing will
-                continue to evolve and will require a change in how we think about TKA. Newer imaging
-                techniques and advanced technology should allow for customization of individual anatomy.&rdquo;
+                &ldquo;Over thousands of cases, expert surgeons develop an intuition for
+                balancing a bicruciate knee. But the vast majority of surgeons will never
+                perform enough BCR procedures to achieve that level of mastery — and their
+                patients will never benefit from the best possible outcome.&rdquo;
               </p>
             </motion.blockquote>
           </motion.div>

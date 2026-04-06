@@ -11,7 +11,7 @@ const roadmap = [
 ];
 
 const networkStats = [
-  { value: "1,000+", label: "Digital twins created" },
+  { value: "1 twin", label: "Per patient, before surgery" },
   { value: "50yr", label: "Simulated per patient" },
   { value: "98.1%", label: "Predicted survivorship" },
   { value: "∞", label: "Continuous learning" },
