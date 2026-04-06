@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import * as THREE from "three";
 import { RealKneeAssembly } from "./KneeGeometry";
@@ -114,7 +114,19 @@ function TwinScene({
   );
 }
 
-/* ── Data readout overlay ───────────────────────────────── */
+/* ── Zoom camera control ─────────────────────────────────── */
+function ZoomControl({ zoom }: { zoom: number }) {
+  const { camera } = useThree();
+
+  useFrame(() => {
+    const targetZ = 3.2 / zoom;
+    camera.position.z += (targetZ - camera.position.z) * 0.08;
+  });
+
+  return null;
+}
+
+/* ── Data readout box (bottom-right corner) ──────────────── */
 function DataReadout({ stage }: { stage: number }) {
   const readouts = [
     { label: "Femoral Mesh", value: "8,000 tri", show: stage >= 1 },
@@ -127,20 +139,29 @@ function DataReadout({ stage }: { stage: number }) {
     { label: "LCL Stiffness", value: "62 N/mm", show: stage >= 3 },
   ];
 
+  const visibleReadouts = readouts.filter((r) => r.show);
+  if (visibleReadouts.length === 0) return null;
+
   return (
-    <div className="absolute right-2 top-12 bottom-2 w-24 flex flex-col justify-center gap-1.5 pointer-events-none">
-      {readouts.map((r, i) => (
-        <div
-          key={r.label}
-          className={`transition-all duration-700 ${
-            r.show ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
-          }`}
-          style={{ transitionDelay: `${i * 80}ms` }}
-        >
-          <div className="text-[8px] text-cartan-gray-blue leading-none">{r.label}</div>
-          <div className="text-[10px] font-mono text-cartan-teal leading-tight">{r.value}</div>
-        </div>
-      ))}
+    <div className="absolute bottom-2 right-2 bg-cartan-dark/90 backdrop-blur-sm border border-cartan-mid-navy/50 rounded-lg px-3 py-2 pointer-events-none">
+      <div className="text-[8px] text-cartan-gray-blue/60 uppercase tracking-wider mb-1.5">Parameters</div>
+      <div className="space-y-1">
+        {readouts.map((r, i) => (
+          <div
+            key={r.label}
+            className={`flex items-center justify-between gap-4 transition-all duration-500 ${
+              r.show ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
+            }`}
+            style={{ transitionDelay: `${i * 60}ms` }}
+          >
+            <span className="text-[9px] text-cartan-gray-blue whitespace-nowrap">{r.label}</span>
+            <span className="text-[10px] font-mono text-cartan-teal whitespace-nowrap">{r.value}</span>
+          </div>
+        ))}
+      </div>
+      <div className="text-[8px] font-mono text-cartan-gray-blue/30 mt-1.5 pt-1 border-t border-cartan-mid-navy/30">
+        Specimen John Doe
+      </div>
     </div>
   );
 }
@@ -152,6 +173,7 @@ export default function DigitalTwinAssembly() {
   const [ligamentData, setLigamentData] = useState<Record<string, number[][]> | null>(null);
   const [manualRotation, setManualRotation] = useState(0);
   const [autoRotate, setAutoRotate] = useState(true);
+  const [zoom, setZoom] = useState(1);
   const [layers, setLayers] = useState({
     bone: true,
     cartilage: true,
@@ -253,6 +275,7 @@ export default function DigitalTwinAssembly() {
           gl={{ antialias: true, alpha: true }}
           style={{ background: "transparent" }}
         >
+          <ZoomControl zoom={zoom} />
           <TwinScene
             stage={stage}
             ligamentData={ligamentData}
@@ -262,54 +285,63 @@ export default function DigitalTwinAssembly() {
           />
         </Canvas>
 
+        {/* Data readout box - bottom right */}
         <DataReadout stage={stage} />
-
-        <div className="absolute top-2 left-2 text-[9px] font-mono text-cartan-gray-blue/50">
-          ANTERIOR
-        </div>
-        <div className="absolute bottom-2 left-2 text-[9px] font-mono text-cartan-gray-blue/50">
-          POSTERIOR
-        </div>
-        <div className="absolute bottom-2 right-2 text-[8px] font-mono text-cartan-gray-blue/30">
-          Specimen John Doe
-        </div>
       </div>
 
-      {/* Rotation slider */}
+      {/* Controls: Rotation + Zoom */}
       {assemblyComplete && (
-        <div className="mt-3">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[10px] text-cartan-gray-blue">Rotation</span>
-            <button
-              onClick={() => setAutoRotate(!autoRotate)}
-              className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
-                autoRotate
-                  ? "text-cartan-teal border-cartan-teal/30 bg-cartan-teal/10"
-                  : "text-cartan-gray-blue border-cartan-mid-navy"
-              }`}
-            >
-              {autoRotate ? "Auto ✓" : "Manual"}
-            </button>
+        <div className="mt-3 space-y-2">
+          {/* Rotation */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] text-cartan-gray-blue">Rotation</span>
+              <button
+                onClick={() => setAutoRotate(!autoRotate)}
+                className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
+                  autoRotate
+                    ? "text-cartan-teal border-cartan-teal/30 bg-cartan-teal/10"
+                    : "text-cartan-gray-blue border-cartan-mid-navy"
+                }`}
+              >
+                {autoRotate ? "Auto ✓" : "Manual"}
+              </button>
+            </div>
+            <input
+              type="range"
+              min={-Math.PI}
+              max={Math.PI}
+              step={0.01}
+              value={manualRotation}
+              onChange={(e) => {
+                setManualRotation(parseFloat(e.target.value));
+                if (autoRotate) setAutoRotate(false);
+              }}
+              className="w-full h-1 bg-cartan-mid-navy rounded-full appearance-none cursor-pointer
+                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cartan-teal
+                [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(74,140,126,0.4)]"
+            />
           </div>
-          <input
-            type="range"
-            min={-Math.PI}
-            max={Math.PI}
-            step={0.01}
-            value={manualRotation}
-            onChange={(e) => {
-              setManualRotation(parseFloat(e.target.value));
-              if (autoRotate) setAutoRotate(false);
-            }}
-            className="w-full h-1 bg-cartan-mid-navy rounded-full appearance-none cursor-pointer
-              [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
-              [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cartan-teal
-              [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(74,140,126,0.4)]"
-          />
-          <div className="flex justify-between text-[9px] text-cartan-gray-blue/50 mt-0.5">
-            <span>−180°</span>
-            <span>{((manualRotation * 180) / Math.PI).toFixed(0)}°</span>
-            <span>+180°</span>
+
+          {/* Zoom */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] text-cartan-gray-blue">Zoom</span>
+              <span className="text-[10px] font-mono text-cartan-teal">{zoom.toFixed(1)}×</span>
+            </div>
+            <input
+              type="range"
+              min={0.5}
+              max={3}
+              step={0.1}
+              value={zoom}
+              onChange={(e) => setZoom(parseFloat(e.target.value))}
+              className="w-full h-1 bg-cartan-mid-navy rounded-full appearance-none cursor-pointer
+                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cartan-teal
+                [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(74,140,126,0.4)]"
+            />
           </div>
         </div>
       )}

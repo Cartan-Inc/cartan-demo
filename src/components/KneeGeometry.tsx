@@ -73,17 +73,20 @@ function AnatomyMesh({
 
 /**
  * Ligament rendered as tube between attachment point centroids.
+ * Optional endpointOverride to adjust distal insertion for clean bone intersection.
  */
 function LigamentFromPoints({
   femPoints,
   tibPoints,
   color,
   visible,
+  distalOverride,
 }: {
   femPoints: number[][];
   tibPoints: number[][];
   color: string;
   visible: boolean;
+  distalOverride?: [number, number, number];
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -94,9 +97,11 @@ function LigamentFromPoints({
     const femCentroid = femPoints
       .reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1], acc[2] + p[2]], [0, 0, 0])
       .map((v) => v / femPoints.length);
-    const tibCentroid = tibPoints
-      .reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1], acc[2] + p[2]], [0, 0, 0])
-      .map((v) => v / tibPoints.length);
+    const tibCentroid = distalOverride
+      ? distalOverride
+      : tibPoints
+          .reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1], acc[2] + p[2]], [0, 0, 0])
+          .map((v) => v / tibPoints.length);
 
     const mid = [
       (femCentroid[0] + tibCentroid[0]) / 2,
@@ -111,7 +116,7 @@ function LigamentFromPoints({
     ]);
 
     return new THREE.TubeGeometry(curve, 12, 0.018, 8, false);
-  }, [femPoints, tibPoints]);
+  }, [femPoints, tibPoints, distalOverride]);
 
   useFrame(() => {
     if (!meshRef.current) return;
@@ -203,12 +208,14 @@ export function RealKneeAssembly({
             tibPoints={ligamentData.MCL_Tib || []}
             color={MCL_COLOR}
             visible={showLigaments}
+            distalOverride={[0.37, -0.42, -0.18]}
           />
           <LigamentFromPoints
             femPoints={ligamentData.LCL_Fem || []}
             tibPoints={ligamentData.LCL_Tib || []}
             color={LCL_COLOR}
             visible={showLigaments}
+            distalOverride={[-0.50, -0.52, -0.38]}
           />
         </>
       )}
