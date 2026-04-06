@@ -2,9 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 
-const KneeModel = dynamic(() => import("../KneeModel"), { ssr: false });
 
 export default function HeroScene() {
   return (
@@ -83,16 +81,6 @@ export default function HeroScene() {
           </svg>
         </motion.a>
       </div>
-
-      {/* 3D Knee Model */}
-      <motion.div
-        className="absolute bottom-20 right-8 md:right-16 w-48 h-64 md:w-64 md:h-80 opacity-30 pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.3 }}
-        transition={{ delay: 1.5, duration: 1.5 }}
-      >
-        <KneeModel showLigaments={true} autoRotate={true} />
-      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div
