@@ -132,8 +132,8 @@ function LigamentFromPoints({
 
     controlPoints.push(new THREE.Vector3(...tibCentroid));
 
-    const curve = new THREE.CatmullRomCurve3(controlPoints);
-    return new THREE.TubeGeometry(curve, 20, radius, 8, false);
+    const curve = new THREE.CatmullRomCurve3(controlPoints, false, 'centripetal', 0.3);
+    return new THREE.TubeGeometry(curve, 24, radius, 8, false);
   }, [femPoints, tibPoints, proximalOverride, distalOverride, waypoints, radius]);
 
   useFrame(() => {
@@ -221,9 +221,9 @@ export function RealKneeAssembly({
             color={PCL_COLOR}
             visible={showLigaments}
           />
-          {/* MCL: medial epicondyle → hugs medial bone surface → inserts on proximal tibia
-              Waypoints placed 0.05 outside the bone surface at each Y level,
-              derived from actual mesh surface measurements */}
+          {/* MCL: medial epicondyle → STRAIGHT to first tibial contact → wraps tibial surface
+              Phase 1: taut straight line from femoral epicondyle to Y≈-0.13 (first tibial contact)
+              Phase 2: follows tibial cortical bone surface + 0.03 offset to insertion */}
           <LigamentFromPoints
             femPoints={ligamentData.MCL_Fem || []}
             tibPoints={ligamentData.MCL_Tib || []}
@@ -231,21 +231,17 @@ export function RealKneeAssembly({
             visible={showLigaments}
             proximalOverride={[0.56, 0.20, -0.15]}
             waypoints={[
-              [0.60, 0.15, -0.15],
-              [0.59, 0.10, -0.15],
-              [0.58, 0.05, -0.15],
-              [0.56, 0.00, -0.16],
-              [0.54, -0.05, -0.16],
-              [0.55, -0.10, -0.17],
-              [0.56, -0.15, -0.17],
-              [0.56, -0.20, -0.18],
-              [0.55, -0.25, -0.18],
-              [0.53, -0.30, -0.18],
-              [0.52, -0.35, -0.19],
-              [0.51, -0.40, -0.19],
-              [0.49, -0.45, -0.19],
+              // Phase 2: wrap along tibial cortical surface (bone surface + 0.03 X offset)
+              [0.523, -0.13, -0.21],
+              [0.536, -0.18, -0.20],
+              [0.529, -0.23, -0.17],
+              [0.515, -0.28, -0.17],
+              [0.505, -0.33, -0.19],
+              [0.491, -0.38, -0.22],
+              [0.478, -0.43, -0.23],
+              [0.436, -0.48, -0.19],
             ]}
-            distalOverride={[0.44, -0.50, -0.19]}
+            distalOverride={[0.40, -0.52, -0.19]}
             radius={0.014}
           />
           {/* LCL: lateral epicondyle → fibular head
