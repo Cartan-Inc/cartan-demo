@@ -68,7 +68,7 @@ function TwinScene({
       <pointLight position={[0, 0, 3]} intensity={0.3} color="#4A8C7E" />
 
       <Float speed={1} rotationIntensity={0.08} floatIntensity={0.15}>
-        <group ref={groupRef} rotation={[0.1, 0, 0]}>
+        <group ref={groupRef}>
           <ScanLine active={scanning} />
           <RealKneeAssembly
             showBone={showBone}

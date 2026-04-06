@@ -17,7 +17,7 @@ function RotatingKnee({ ligamentData }: { ligamentData: Record<string, number[][
 
   return (
     <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
-      <group ref={groupRef} rotation={[0.15, 0, 0]}>
+      <group ref={groupRef}>
         <RealKneeAssembly
           showBone={true}
           showCartilage={true}
