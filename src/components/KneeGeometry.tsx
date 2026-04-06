@@ -221,29 +221,41 @@ export function RealKneeAssembly({
             color={PCL_COLOR}
             visible={showLigaments}
           />
-          {/* MCL: medial epicondyle → curves medially around tibial surface → inserts distally */}
+          {/* MCL: medial epicondyle → hugs medial bone surface → inserts on proximal tibia
+              Waypoints placed 0.05 outside the bone surface at each Y level,
+              derived from actual mesh surface measurements */}
           <LigamentFromPoints
             femPoints={ligamentData.MCL_Fem || []}
             tibPoints={ligamentData.MCL_Tib || []}
             color={MCL_COLOR}
             visible={showLigaments}
-            proximalOverride={[0.56, 0.18, -0.13]}
+            proximalOverride={[0.56, 0.20, -0.15]}
             waypoints={[
-              [0.58, 0.02, -0.15],
-              [0.54, -0.10, -0.17],
-              [0.52, -0.22, -0.18],
-              [0.50, -0.35, -0.19],
+              [0.60, 0.15, -0.15],
+              [0.59, 0.10, -0.15],
+              [0.58, 0.05, -0.15],
+              [0.56, 0.00, -0.16],
+              [0.54, -0.05, -0.16],
+              [0.55, -0.10, -0.17],
+              [0.56, -0.15, -0.17],
+              [0.56, -0.20, -0.18],
+              [0.55, -0.25, -0.18],
+              [0.53, -0.30, -0.18],
+              [0.52, -0.35, -0.19],
+              [0.51, -0.40, -0.19],
+              [0.49, -0.45, -0.19],
             ]}
             distalOverride={[0.44, -0.50, -0.19]}
-            radius={0.016}
+            radius={0.014}
           />
-          {/* LCL: lateral epicondyle → fibular head */}
+          {/* LCL: lateral epicondyle → fibular head
+              Proximal starts inside lateral epicondyle (surface at X≈-0.55) */}
           <LigamentFromPoints
             femPoints={ligamentData.LCL_Fem || []}
             tibPoints={ligamentData.LCL_Tib || []}
             color={LCL_COLOR}
             visible={showLigaments}
-            proximalOverride={[-0.56, 0.19, -0.15]}
+            proximalOverride={[-0.59, 0.19, -0.15]}
             distalOverride={[-0.50, -0.48, -0.36]}
           />
         </>
