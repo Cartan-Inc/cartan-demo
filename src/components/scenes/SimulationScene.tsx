@@ -4,6 +4,12 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import SceneWrapper from "../SceneWrapper";
 import ToolingBadge from "../ToolingBadge";
+import CyclicStressPanel from "../simulation/CyclicStressPanel";
+import WearPanel from "../simulation/WearPanel";
+import FractureRiskPanel from "../simulation/FractureRiskPanel";
+import BoneIngrowthPanel from "../simulation/BoneIngrowthPanel";
+import LooseningPanel from "../simulation/LooseningPanel";
+import type { ImplantType } from "../simulation/simData";
 
 const simulationPanels = [
   {
@@ -196,32 +202,12 @@ export default function SimulationScene() {
             </div>
 
             {/* Active panel visualization */}
-            <div className={`bg-gradient-to-br ${simulationPanels.find(p => p.id === activePanel)?.gradient} rounded-xl border border-cartan-mid-navy p-8 text-center`}>
-              <div className="text-4xl mb-3">{simulationPanels.find(p => p.id === activePanel)?.icon}</div>
-              <div className="text-sm text-cartan-white/80 font-semibold mb-1">
-                {simulationPanels.find(p => p.id === activePanel)?.label}
-              </div>
-              <div className="text-xs text-cartan-gray-blue">
-                {simulationPanels.find(p => p.id === activePanel)?.description}
-              </div>
-              <div className="mt-4 font-mono text-xs text-cartan-teal/80">
-                Simulating {years} years of daily loading cycles...
-              </div>
-
-              {/* Animated heatmap bars */}
-              <div className="mt-4 flex gap-1 justify-center items-end h-16">
-                {Array.from({ length: 20 }, (_, i) => {
-                  const intensity = Math.sin((i / 20) * Math.PI) * (years / 50);
-                  return (
-                    <motion.div
-                      key={i}
-                      className="w-2 rounded-t bg-cartan-teal/60"
-                      animate={{ height: `${20 + intensity * 44}px`, opacity: 0.3 + intensity * 0.7 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  );
-                })}
-              </div>
+            <div className="bg-cartan-dark/40 rounded-xl border border-cartan-mid-navy p-4">
+              {activePanel === "stress" && <CyclicStressPanel years={years} implant={implantType} />}
+              {activePanel === "wear" && <WearPanel years={years} implant={implantType} />}
+              {activePanel === "fracture" && <FractureRiskPanel years={years} implant={implantType} />}
+              {activePanel === "ingrowth" && <BoneIngrowthPanel years={years} implant={implantType} />}
+              {activePanel === "loosening" && <LooseningPanel years={years} implant={implantType} />}
             </div>
           </motion.div>
 
