@@ -22,7 +22,7 @@ export const metadata: Metadata = {
       "Experience the future of knee replacement surgery.",
     images: ["/banner-1920x1080-new.png"],
     type: "website",
-    url: "https://demo.cartan.io",
+    url: "https://cartan.io",
   },
   icons: {
     icon: "/favicon_2k_square.png",

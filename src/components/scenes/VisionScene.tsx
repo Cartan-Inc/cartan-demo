@@ -184,18 +184,18 @@ export default function VisionScene() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="https://cartan.io"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="mailto:jonathan.trousdale@cartan.io"
               className="px-8 py-3 bg-cartan-teal text-cartan-dark font-semibold rounded-full hover:bg-cartan-teal/90 transition-all"
             >
-              Learn More
+              Get in Touch
             </a>
             <a
-              href="mailto:jonathan.trousdale@cartan.io"
+              href="https://www.linkedin.com/company/cartanai/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-8 py-3 bg-cartan-teal/10 border border-cartan-teal/30 text-cartan-teal rounded-full hover:bg-cartan-teal/20 transition-all"
             >
-              Get in Touch
+              Follow Us
             </a>
           </div>
         </motion.div>
