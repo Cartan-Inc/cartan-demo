@@ -72,51 +72,69 @@ function AnatomyMesh({
 }
 
 /**
- * Ligament rendered as tube between attachment point centroids.
- * Optional endpointOverride to adjust distal insertion for clean bone intersection.
+ * Ligament rendered as tube through control points.
+ * Uses attachment point centroids by default, with optional waypoints
+ * for routing around bone surfaces.
  */
 function LigamentFromPoints({
   femPoints,
   tibPoints,
   color,
   visible,
+  proximalOverride,
   distalOverride,
+  waypoints,
+  radius = 0.018,
 }: {
   femPoints: number[][];
   tibPoints: number[][];
   color: string;
   visible: boolean;
+  proximalOverride?: [number, number, number];
   distalOverride?: [number, number, number];
+  waypoints?: [number, number, number][];
+  radius?: number;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
 
   const geometry = useMemo(() => {
     if (!femPoints.length || !tibPoints.length) return null;
 
-    // Compute centroids
-    const femCentroid = femPoints
-      .reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1], acc[2] + p[2]], [0, 0, 0])
-      .map((v) => v / femPoints.length);
+    const femCentroid = proximalOverride
+      ? proximalOverride
+      : (femPoints
+          .reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1], acc[2] + p[2]], [0, 0, 0])
+          .map((v) => v / femPoints.length) as [number, number, number]);
     const tibCentroid = distalOverride
       ? distalOverride
-      : tibPoints
+      : (tibPoints
           .reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1], acc[2] + p[2]], [0, 0, 0])
-          .map((v) => v / tibPoints.length);
+          .map((v) => v / tibPoints.length) as [number, number, number]);
 
-    const mid = [
-      (femCentroid[0] + tibCentroid[0]) / 2,
-      (femCentroid[1] + tibCentroid[1]) / 2,
-      (femCentroid[2] + tibCentroid[2]) / 2 + 0.02,
+    // Build control points: proximal → waypoints → distal
+    const controlPoints: THREE.Vector3[] = [
+      new THREE.Vector3(...femCentroid),
     ];
 
-    const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(femCentroid[0], femCentroid[1], femCentroid[2]),
-      new THREE.Vector3(mid[0], mid[1], mid[2]),
-      new THREE.Vector3(tibCentroid[0], tibCentroid[1], tibCentroid[2]),
-    ]);
+    if (waypoints && waypoints.length > 0) {
+      for (const wp of waypoints) {
+        controlPoints.push(new THREE.Vector3(...wp));
+      }
+    } else {
+      // Default: simple midpoint with slight anterior offset
+      const mid = new THREE.Vector3(
+        (femCentroid[0] + tibCentroid[0]) / 2,
+        (femCentroid[1] + tibCentroid[1]) / 2,
+        (femCentroid[2] + tibCentroid[2]) / 2 + 0.02,
+      );
+      controlPoints.push(mid);
+    }
 
-    return new THREE.TubeGeometry(curve, 12, 0.018, 8, false);
-  }, [femPoints, tibPoints, distalOverride]);
+    controlPoints.push(new THREE.Vector3(...tibCentroid));
+
+    const curve = new THREE.CatmullRomCurve3(controlPoints);
+    return new THREE.TubeGeometry(curve, 20, radius, 8, false);
+  }, [femPoints, tibPoints, proximalOverride, distalOverride, waypoints, radius]);
 
   useFrame(() => {
     if (!meshRef.current) return;
@@ -203,19 +221,30 @@ export function RealKneeAssembly({
             color={PCL_COLOR}
             visible={showLigaments}
           />
+          {/* MCL: medial epicondyle → curves around medial tibial surface → inserts distally */}
           <LigamentFromPoints
             femPoints={ligamentData.MCL_Fem || []}
             tibPoints={ligamentData.MCL_Tib || []}
             color={MCL_COLOR}
             visible={showLigaments}
-            distalOverride={[0.37, -0.42, -0.18]}
+            proximalOverride={[0.58, 0.20, -0.14]}
+            waypoints={[
+              [0.56, 0.05, -0.10],
+              [0.52, -0.08, -0.08],
+              [0.51, -0.20, -0.12],
+              [0.49, -0.35, -0.16],
+            ]}
+            distalOverride={[0.44, -0.50, -0.19]}
+            radius={0.016}
           />
+          {/* LCL: lateral epicondyle → fibular head */}
           <LigamentFromPoints
             femPoints={ligamentData.LCL_Fem || []}
             tibPoints={ligamentData.LCL_Tib || []}
             color={LCL_COLOR}
             visible={showLigaments}
-            distalOverride={[-0.50, -0.52, -0.38]}
+            proximalOverride={[-0.54, 0.18, -0.17]}
+            distalOverride={[-0.50, -0.48, -0.36]}
           />
         </>
       )}
