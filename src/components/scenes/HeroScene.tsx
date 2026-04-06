@@ -42,7 +42,7 @@ export default function HeroScene() {
             alt="Cartan"
             width={300}
             height={80}
-            className="mx-auto mb-6 h-auto w-48 md:w-72"
+            className="mx-auto mb-6 h-auto w-48 md:h-20 md:w-auto"
             priority
           />
         </motion.div>
