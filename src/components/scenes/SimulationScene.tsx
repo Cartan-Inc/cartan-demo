@@ -97,17 +97,17 @@ export default function SimulationScene() {
           a 50-year horizon — exploring wear, stress, and failure modes before the first incision.
         </motion.p>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {/* Left: Timeline + Survivorship */}
           <motion.div
-            className="md:col-span-2 bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6"
+            className="md:col-span-2 bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-4 md:p-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
             viewport={{ once: true }}
           >
             {/* Implant toggle */}
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-6">
               <button
                 onClick={() => setImplantType("bcr")}
                 className={`px-4 py-2 text-sm rounded-lg transition-all ${
@@ -128,7 +128,7 @@ export default function SimulationScene() {
               >
                 CR Implant
               </button>
-              <span className="text-xs text-cartan-gray-blue ml-2">Compare implant configurations</span>
+              <span className="hidden sm:inline text-xs text-cartan-gray-blue ml-2">Compare implant configurations</span>
             </div>
 
             {/* Timeline slider */}
@@ -184,7 +184,7 @@ export default function SimulationScene() {
             </div>
 
             {/* Simulation panels */}
-            <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+            <div className="flex gap-2 mb-4 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-none">
               {simulationPanels.map((panel) => (
                 <button
                   key={panel.id}
@@ -213,7 +213,7 @@ export default function SimulationScene() {
 
           {/* Right: Surgeon Parameters */}
           <motion.div
-            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6"
+            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-4 md:p-6"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}

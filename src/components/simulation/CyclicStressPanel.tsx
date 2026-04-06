@@ -143,7 +143,7 @@ export default function CyclicStressPanel({ years, implant }: { years: number; i
   return (
     <div className="space-y-4">
       {/* Key metrics */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 md:gap-3">
         <div className="bg-cartan-dark/60 rounded-lg p-3">
           <div className="text-[9px] text-cartan-gray-blue">Peak Stress</div>
           <div className="text-lg font-mono text-cartan-teal">{data.peakStress} <span className="text-[10px] text-cartan-gray-blue">MPa</span></div>
@@ -174,7 +174,7 @@ export default function CyclicStressPanel({ years, implant }: { years: number; i
             style={{
               gridTemplateColumns: `repeat(${COLS}, 1fr)`,
               width: "100%",
-              maxWidth: "320px",
+              maxWidth: "100%",
             }}
           >
             {cells.map((cell, i) => (

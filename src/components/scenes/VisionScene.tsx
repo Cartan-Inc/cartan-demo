@@ -137,7 +137,7 @@ export default function VisionScene() {
             Product Roadmap
           </h3>
 
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {roadmap.map((item, i) => (
               <motion.div
                 key={item.year}

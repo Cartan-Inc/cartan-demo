@@ -245,7 +245,7 @@ export default function DigitalTwinAssembly() {
   const assemblyComplete = stage >= STAGES.length - 1;
 
   return (
-    <div ref={containerRef} className="relative w-full h-full min-h-[420px] flex flex-col">
+    <div ref={containerRef} className="relative w-full h-full min-h-[350px] md:min-h-[420px] flex flex-col">
       <h3 className="text-sm text-cartan-teal font-mono uppercase tracking-wider mb-2">
         Digital Twin Assembly
       </h3>
@@ -317,7 +317,7 @@ export default function DigitalTwinAssembly() {
 
       {/* Controls: Rotation + Zoom */}
       {assemblyComplete && (
-        <div className="mt-3 space-y-2">
+        <div className="mt-3 space-y-2 touch-none">
           {/* Rotation */}
           <div>
             <div className="flex items-center justify-between mb-1">
@@ -373,7 +373,7 @@ export default function DigitalTwinAssembly() {
       )}
 
       {/* Layer toggles */}
-      <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 mt-3">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-2 mt-3">
         {[
           { key: "bone" as const, label: "Cortical Bone", color: "bg-[#e8ddd0]", show: stage >= 1 },
           { key: "cartilage" as const, label: "Articular Cartilage", color: "bg-[#c0d4da]", show: stage >= 2 },

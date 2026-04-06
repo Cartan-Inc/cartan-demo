@@ -91,10 +91,10 @@ export default function DigitalTwinScene() {
           digital twin — a complete biomechanical model of the patient&apos;s knee.
         </motion.p>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {/* Left: Patient Data + Imaging Pipeline */}
           <motion.div
-            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6"
+            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-4 md:p-6"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
@@ -208,7 +208,7 @@ export default function DigitalTwinScene() {
 
           {/* Center: Twin Assembly Visualization */}
           <motion.div
-            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-5"
+            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-4 md:p-5 order-first md:order-none"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
@@ -219,7 +219,7 @@ export default function DigitalTwinScene() {
 
           {/* Right: AI Agent Sidebar */}
           <motion.div
-            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6 flex flex-col"
+            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-4 md:p-6 flex flex-col"
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}

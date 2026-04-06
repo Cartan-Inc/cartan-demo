@@ -118,7 +118,7 @@ export default function SurgeryScene() {
           dynamically update the plan with intraop data, and verify every step against prescribed thresholds.
         </motion.p>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {/* Left: Surgical Timeline */}
           <motion.div
             className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6"

@@ -10,7 +10,7 @@ interface ToolingBadgeProps {
 export default function ToolingBadge({ tools, delay = 0 }: ToolingBadgeProps) {
   return (
     <motion.div
-      className="flex flex-wrap gap-2 mt-4"
+      className="flex flex-wrap gap-1.5 md:gap-2 mt-4 justify-center md:justify-start"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       transition={{ delay, duration: 0.5 }}

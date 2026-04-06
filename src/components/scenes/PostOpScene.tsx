@@ -49,7 +49,7 @@ export default function PostOpScene() {
           data back into the digital twin.
         </motion.p>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {/* Left: Recovery Timeline */}
           <motion.div
             className="md:col-span-2 bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6"
@@ -68,7 +68,7 @@ export default function PostOpScene() {
                 <span className="text-xs text-cartan-gray-blue">Forgotten Joint Score (FJS-12)</span>
                 <span className="text-xs text-cartan-gray-blue">Higher = better (max 100)</span>
               </div>
-              <div className="flex items-end gap-2 h-40">
+              <div className="flex items-end gap-1 md:gap-2 h-32 md:h-40">
                 {timelinePoints.map((point, i) => (
                   <motion.div
                     key={point.time}
@@ -93,7 +93,7 @@ export default function PostOpScene() {
             </div>
 
             {/* ROM Progress */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 mb-6">
               {timelinePoints.map((point, i) => (
                 <motion.div
                   key={point.time}

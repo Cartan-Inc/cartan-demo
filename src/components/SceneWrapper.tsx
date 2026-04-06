@@ -13,7 +13,7 @@ export default function SceneWrapper({ children, id, className = "" }: SceneWrap
   return (
     <motion.section
       id={id}
-      className={`min-h-screen relative flex flex-col justify-center px-6 md:px-16 lg:px-24 py-20 ${className}`}
+      className={`min-h-screen relative flex flex-col justify-center px-4 sm:px-6 md:px-16 lg:px-24 py-12 md:py-20 ${className}`}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
