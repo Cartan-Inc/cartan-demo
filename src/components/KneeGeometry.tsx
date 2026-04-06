@@ -269,13 +269,14 @@ export function RealKneeAssembly({
             radius={0.014}
           />
           {/* LCL: lateral epicondyle → fibular head
-              Proximal starts inside lateral epicondyle (surface at X≈-0.55) */}
+              Lateral epicondyle surface at X≈-0.55 to -0.565 at Y≈0.19
+              Proximal starts well inside the bone */}
           <LigamentFromPoints
             femPoints={ligamentData.LCL_Fem || []}
             tibPoints={ligamentData.LCL_Tib || []}
             color={LCL_COLOR}
             visible={showLigaments}
-            proximalOverride={[-0.59, 0.19, -0.15]}
+            proximalOverride={[-0.46, 0.19, -0.15]}
             distalOverride={[-0.50, -0.48, -0.36]}
           />
         </>
