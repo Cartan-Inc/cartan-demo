@@ -240,10 +240,10 @@ export function RealKneeAssembly({
             color={PCL_COLOR}
             visible={showLigaments}
           />
-          {/* MCL: medial epicondyle → STRAIGHT to tibial contact → wraps tibial surface
-              Phase 1: taut line, outside femoral condyle (surface X≈0.53-0.56)
-              Phase 2: follows tibial bone surface + 0.06 clearance
-              Bone surface X measured from actual mesh at each Y level */}
+          {/* MCL: femoral epicondyle → STRAIGHT to proximal tibia → smooth surface wrap
+              Phase 1: perfectly straight (no waypoints) from epicondyle to
+                       medial edge of proximal tibial bone
+              Phase 2: smooth wrap along tibial surface (bone+0.06, smoothed Z≈-0.20) */}
           <LigamentFromPoints
             femPoints={ligamentData.MCL_Fem || []}
             tibPoints={ligamentData.MCL_Tib || []}
@@ -251,26 +251,22 @@ export function RealKneeAssembly({
             visible={showLigaments}
             proximalOverride={[0.58, 0.20, -0.16]}
             waypoints={[
-              // Phase 1: straight descent outside femoral condyle
-              [0.58, 0.10, -0.17],
-              [0.57, 0.00, -0.18],
-              [0.56, -0.06, -0.18],
-              // Phase 2: wrap tibial surface (measured bone max X + 0.06)
-              [0.54, -0.12, -0.19],   // bone 0.477 + 0.06 = 0.537, straight approach
-              [0.57, -0.15, -0.18],   // bone 0.505 + 0.06 = 0.565
-              [0.57, -0.18, -0.19],   // bone 0.506 + 0.06 = 0.566
-              [0.56, -0.21, -0.18],   // bone 0.503 + 0.06 = 0.563
-              [0.56, -0.24, -0.17],   // bone 0.496 + 0.06 = 0.556
-              [0.55, -0.27, -0.18],   // bone 0.486 + 0.06 = 0.546
-              [0.54, -0.30, -0.19],   // bone 0.480 + 0.06 = 0.540
-              [0.54, -0.33, -0.19],   // bone 0.475 + 0.06 = 0.535
-              [0.53, -0.36, -0.19],   // bone 0.468 + 0.06 = 0.528
-              [0.52, -0.39, -0.20],   // bone 0.459 + 0.06 = 0.519
-              [0.51, -0.42, -0.20],   // bone 0.451 + 0.06 = 0.511
-              [0.49, -0.45, -0.20],   // bone 0.433 + 0.06 = 0.493
-              [0.47, -0.48, -0.19],   // bone 0.406 + 0.06 = 0.466
+              // NO phase 1 waypoints — straight line to first tibial contact
+              // Phase 2: smooth wrap (bone maxX + 0.06 clearance, Z smoothed to ~-0.20)
+              [0.57, -0.15, -0.20],   // bone 0.505
+              [0.57, -0.18, -0.20],   // bone 0.506
+              [0.56, -0.21, -0.20],   // bone 0.503
+              [0.56, -0.24, -0.20],   // bone 0.496
+              [0.55, -0.27, -0.20],   // bone 0.486
+              [0.54, -0.30, -0.20],   // bone 0.480
+              [0.54, -0.33, -0.20],   // bone 0.475
+              [0.53, -0.36, -0.20],   // bone 0.468
+              [0.52, -0.39, -0.20],   // bone 0.459
+              [0.51, -0.42, -0.21],   // bone 0.451
+              [0.49, -0.45, -0.21],   // bone 0.433
+              [0.47, -0.48, -0.20],   // bone 0.406
             ]}
-            distalOverride={[0.43, -0.51, -0.19]}
+            distalOverride={[0.43, -0.51, -0.20]}
             radius={0.014}
           />
           {/* LCL: lateral epicondyle → fibular head
