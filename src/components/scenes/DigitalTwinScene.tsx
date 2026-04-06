@@ -6,14 +6,7 @@ import SceneWrapper from "../SceneWrapper";
 import AgentMessage from "../AgentMessage";
 import ToolingBadge from "../ToolingBadge";
 
-const KneeModel = dynamic(() => import("../KneeModel"), { ssr: false });
-
-const twinLayers = [
-  { label: "Bone Geometry", color: "bg-cartan-white/20", icon: "🦴", delay: 0.3 },
-  { label: "Ligaments (ACL/PCL/MCL/LCL)", color: "bg-cartan-teal/30", icon: "🔗", delay: 0.6 },
-  { label: "Articular Capsule", color: "bg-cartan-light-blue/20", icon: "🫧", delay: 0.9 },
-  { label: "Quadricep & Patella Tracking", color: "bg-amber-500/20", icon: "💪", delay: 1.2 },
-];
+const DigitalTwinAssembly = dynamic(() => import("../DigitalTwinAssembly"), { ssr: false });
 
 const patientData = [
   { label: "Age", value: "62" },
@@ -80,70 +73,67 @@ export default function DigitalTwinScene() {
             </div>
 
             <div className="mt-6 pt-4 border-t border-cartan-mid-navy">
-              <h4 className="text-xs text-cartan-gray-blue mb-3">Imaging</h4>
-              <div className="grid grid-cols-2 gap-2">
-                {["WB X-Ray", "MRI", "CT Scan", "Gait Analysis"].map((img, i) => (
+              <h4 className="text-xs text-cartan-gray-blue mb-3">Imaging Pipeline</h4>
+              <div className="space-y-2">
+                {[
+                  { label: "Weight-Bearing X-Ray", status: "Processed", icon: "✓" },
+                  { label: "MRI (3T Sagittal)", status: "Segmented", icon: "✓" },
+                  { label: "CT Scan", status: "Meshed", icon: "✓" },
+                  { label: "Video Gait Analysis", status: "Analyzed", icon: "✓" },
+                ].map((img, i) => (
                   <motion.div
-                    key={img}
-                    className="bg-cartan-mid-navy/40 border border-cartan-mid-navy rounded-lg px-3 py-2 text-xs text-cartan-white/70 text-center"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 + i * 0.1, duration: 0.3 }}
+                    key={img.label}
+                    className="flex items-center justify-between bg-cartan-mid-navy/30 border border-cartan-mid-navy/50 rounded-lg px-3 py-2"
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 + i * 0.12, duration: 0.3 }}
                     viewport={{ once: true }}
                   >
-                    <span className="text-cartan-teal">✓</span> {img}
+                    <span className="text-xs text-cartan-white/70">{img.label}</span>
+                    <span className="text-[10px] font-mono text-cartan-teal">{img.icon} {img.status}</span>
                   </motion.div>
                 ))}
               </div>
             </div>
+
+            {/* Segmentation confidence */}
+            <motion.div
+              className="mt-4 p-3 bg-cartan-teal/5 border border-cartan-teal/15 rounded-lg"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 1.0, duration: 0.5 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-[10px] text-cartan-gray-blue">BCR Eligibility</span>
+                <span className="text-xs font-mono text-cartan-teal">94.2%</span>
+              </div>
+              <div className="h-1.5 bg-cartan-mid-navy rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-cartan-teal rounded-full"
+                  initial={{ width: 0 }}
+                  whileInView={{ width: "94.2%" }}
+                  transition={{ delay: 1.2, duration: 0.8 }}
+                  viewport={{ once: true }}
+                />
+              </div>
+            </motion.div>
           </motion.div>
 
           {/* Center: Twin Assembly Visualization */}
           <motion.div
-            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6 flex flex-col"
+            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-5"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-sm text-cartan-teal font-mono uppercase tracking-wider mb-4">
-              Digital Twin Assembly
-            </h3>
-
-            {/* 3D Knee Model */}
-            <div className="flex-1 flex flex-col justify-center">
-              <motion.div
-                className="relative mx-auto w-full h-56"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-                viewport={{ once: true }}
-              >
-                <KneeModel showLigaments={true} showImplant={false} autoRotate={true} />
-              </motion.div>
-
-              {/* Layer labels */}
-              <div className="mt-4 space-y-2">
-                {twinLayers.map((layer) => (
-                  <motion.div
-                    key={layer.label}
-                    className="flex items-center gap-2 text-xs"
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: layer.delay + 0.6, duration: 0.3 }}
-                    viewport={{ once: true }}
-                  >
-                    <div className={`w-3 h-3 rounded-sm ${layer.color} border border-cartan-white/10`} />
-                    <span className="text-cartan-white/70">{layer.label}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+            <DigitalTwinAssembly />
           </motion.div>
 
           {/* Right: AI Agent Sidebar */}
           <motion.div
-            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6"
+            className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6 flex flex-col"
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -153,20 +143,42 @@ export default function DigitalTwinScene() {
               AI Agent
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-4 flex-1">
               <AgentMessage
-                message="Segmentation complete. Patient classified as BCR-eligible (Kellgren-Lawrence Grade III, intact ACL/PCL confirmed on MRI)."
+                message="Segmentation complete. Kellgren-Lawrence Grade III confirmed. ACL/PCL intact on MRI — patient is BCR-eligible."
                 delay={0.8}
               />
               <AgentMessage
-                message="Digital twin constructed. Four-bar linkage model of ACL/PCL calibrated. Estimating ligament stress-strain curves..."
-                delay={1.4}
+                message="Four-bar linkage model calibrated. ACL tension: 142N, PCL: 118N. Estimating stress-strain curves from laximetry data…"
+                delay={1.8}
               />
               <AgentMessage
-                message="Recommending Size 4 femoral / Size 3 tibial. Confidence: 94.2%. Requesting radiological laximetry to improve estimate."
-                delay={2.0}
+                message="Implant sizing: Femoral 4 / Tibial 3. Medial tibial slope: 5°. Confidence: 94.2%. Digital twin ready for simulation."
+                delay={2.8}
               />
             </div>
+
+            {/* Processing summary */}
+            <motion.div
+              className="mt-4 pt-4 border-t border-cartan-mid-navy space-y-2"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 3.5, duration: 0.5 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-[10px] text-cartan-gray-blue uppercase tracking-wider mb-2">Processing Summary</div>
+              {[
+                { label: "Imaging sources", value: "4" },
+                { label: "Mesh elements", value: "284,192" },
+                { label: "Parameters estimated", value: "47" },
+                { label: "Processing time", value: "2.4 min" },
+              ].map((item) => (
+                <div key={item.label} className="flex justify-between items-center">
+                  <span className="text-[10px] text-cartan-gray-blue">{item.label}</span>
+                  <span className="text-[11px] font-mono text-cartan-white/70">{item.value}</span>
+                </div>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
 
