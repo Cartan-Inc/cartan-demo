@@ -240,31 +240,37 @@ export function RealKneeAssembly({
             color={PCL_COLOR}
             visible={showLigaments}
           />
-          {/* MCL: medial epicondyle → STRAIGHT to first tibial contact → wraps tibial surface
-              Phase 1: taut straight line (stays outside femoral condyle X≈0.56)
-              Phase 2: follows tibial cortical bone surface + 0.03 offset to insertion */}
+          {/* MCL: medial epicondyle → STRAIGHT to tibial contact → wraps tibial surface
+              Phase 1: taut line, outside femoral condyle (surface X≈0.53-0.56)
+              Phase 2: follows tibial bone surface + 0.06 clearance
+              Bone surface X measured from actual mesh at each Y level */}
           <LigamentFromPoints
             femPoints={ligamentData.MCL_Fem || []}
             tibPoints={ligamentData.MCL_Tib || []}
             color={MCL_COLOR}
             visible={showLigaments}
-            proximalOverride={[0.58, 0.20, -0.15]}
+            proximalOverride={[0.58, 0.20, -0.16]}
             waypoints={[
-              // Phase 1: straight descent, staying outside femoral condyle (surface X≈0.53-0.56)
-              [0.58, 0.10, -0.16],
-              [0.57, 0.00, -0.17],
+              // Phase 1: straight descent outside femoral condyle
+              [0.58, 0.10, -0.17],
+              [0.57, 0.00, -0.18],
               [0.56, -0.06, -0.18],
-              // Phase 2: tibial contact → follow surface (bone + 0.04 offset)
-              [0.53, -0.13, -0.19],
-              [0.54, -0.18, -0.19],
-              [0.53, -0.23, -0.18],
-              [0.52, -0.28, -0.18],
-              [0.51, -0.33, -0.19],
-              [0.50, -0.38, -0.20],
-              [0.48, -0.43, -0.20],
-              [0.46, -0.48, -0.19],
+              // Phase 2: wrap tibial surface (measured bone max X + 0.06)
+              [0.54, -0.12, -0.19],   // bone 0.477 + 0.06 = 0.537, straight approach
+              [0.57, -0.15, -0.18],   // bone 0.505 + 0.06 = 0.565
+              [0.57, -0.18, -0.19],   // bone 0.506 + 0.06 = 0.566
+              [0.56, -0.21, -0.18],   // bone 0.503 + 0.06 = 0.563
+              [0.56, -0.24, -0.17],   // bone 0.496 + 0.06 = 0.556
+              [0.55, -0.27, -0.18],   // bone 0.486 + 0.06 = 0.546
+              [0.54, -0.30, -0.19],   // bone 0.480 + 0.06 = 0.540
+              [0.54, -0.33, -0.19],   // bone 0.475 + 0.06 = 0.535
+              [0.53, -0.36, -0.19],   // bone 0.468 + 0.06 = 0.528
+              [0.52, -0.39, -0.20],   // bone 0.459 + 0.06 = 0.519
+              [0.51, -0.42, -0.20],   // bone 0.451 + 0.06 = 0.511
+              [0.49, -0.45, -0.20],   // bone 0.433 + 0.06 = 0.493
+              [0.47, -0.48, -0.19],   // bone 0.406 + 0.06 = 0.466
             ]}
-            distalOverride={[0.42, -0.52, -0.19]}
+            distalOverride={[0.43, -0.51, -0.19]}
             radius={0.014}
           />
           {/* LCL: lateral epicondyle → fibular head
