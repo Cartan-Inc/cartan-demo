@@ -1,23 +1,63 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import SceneWrapper from "../SceneWrapper";
 import AgentMessage from "../AgentMessage";
 import ToolingBadge from "../ToolingBadge";
 
 const DigitalTwinAssembly = dynamic(() => import("../DigitalTwinAssembly"), { ssr: false });
 
+// Real specimen data from DU01
 const patientData = [
-  { label: "Age", value: "62" },
-  { label: "BMI", value: "28.4" },
-  { label: "Activity Level", value: "Moderate" },
-  { label: "Deformity", value: "Varus 4°" },
-  { label: "Bone Quality", value: "T-score: -1.2" },
-  { label: "ROM", value: "5° — 118°" },
+  { label: "Specimen", value: "DU01" },
+  { label: "Sex", value: "Male" },
+  { label: "Body Part", value: "Lower Extremity" },
+  { label: "Ligament Status", value: "Intact (ACL/PCL)" },
+  { label: "ROM (measured)", value: "14.7° — 137.5°" },
+  { label: "Quad Force Range", value: "84.5 — 632.6 N" },
+];
+
+const imagingSources = [
+  {
+    id: "ct",
+    label: "CT Scan (0.6mm)",
+    status: "251 slices · segmented",
+    detail: "Siemens Sensation 64 · 120 kVP · 512×512 · 0.39mm pixel spacing · 0.6mm slice thickness · B31s kernel",
+    preview: "/models/ct_slice.png",
+    previewLabel: "Axial CT — Slice 125/251",
+  },
+  {
+    id: "mri",
+    label: "MRI (WB Sagittal)",
+    status: "192 slices · segmented",
+    detail: "Siemens Avanto 1.5T · t2_trufi3d · 320×320 · 0.53mm pixel spacing · 0.6mm slice thickness",
+    preview: "/models/sag_slice.png",
+    previewLabel: "Sagittal MRI — Slice 96/192",
+  },
+  {
+    id: "recon",
+    label: "3D Reconstruction",
+    status: "7 meshes · 16 point clouds",
+    detail: "Probed surfaces: Femur, Tibia, Fibula, Patella (bone + cartilage) · ACL/PCL/MCL/LCL attachment sites",
+    preview: null,
+    previewLabel: null,
+  },
+  {
+    id: "kin",
+    label: "Kinematics & Laxity",
+    status: "9,101 data points",
+    detail: "Intact knee extension (101 pts) · AP/IE/VV laxity testing (9,000 pts) · Tibiofemoral + patellofemoral 6-DOF",
+    preview: null,
+    previewLabel: null,
+  },
 ];
 
 export default function DigitalTwinScene() {
+  const [expandedSource, setExpandedSource] = useState<string | null>(null);
+
   return (
     <SceneWrapper id="digital-twin" className="bg-cartan-navy/30">
       <div className="max-w-6xl mx-auto w-full">
@@ -52,7 +92,7 @@ export default function DigitalTwinScene() {
         </motion.p>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {/* Left: Patient Intake */}
+          {/* Left: Patient Data + Imaging Pipeline */}
           <motion.div
             className="bg-cartan-dark/60 border border-cartan-mid-navy rounded-xl p-6"
             initial={{ opacity: 0, x: -30 }}
@@ -61,36 +101,82 @@ export default function DigitalTwinScene() {
             viewport={{ once: true }}
           >
             <h3 className="text-sm text-cartan-teal font-mono uppercase tracking-wider mb-4">
-              Patient Profile
+              Specimen Data
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {patientData.map((item) => (
                 <div key={item.label} className="flex justify-between items-center">
                   <span className="text-xs text-cartan-gray-blue">{item.label}</span>
-                  <span className="text-sm font-mono text-cartan-white/90">{item.value}</span>
+                  <span className="text-xs font-mono text-cartan-white/90">{item.value}</span>
                 </div>
               ))}
             </div>
 
             <div className="mt-6 pt-4 border-t border-cartan-mid-navy">
-              <h4 className="text-xs text-cartan-gray-blue mb-3">Imaging Pipeline</h4>
+              <h4 className="text-xs text-cartan-teal font-mono uppercase tracking-wider mb-3">
+                Imaging Pipeline
+              </h4>
               <div className="space-y-2">
-                {[
-                  { label: "Weight-Bearing X-Ray", status: "Processed", icon: "✓" },
-                  { label: "MRI (3T Sagittal)", status: "Segmented", icon: "✓" },
-                  { label: "CT Scan", status: "Meshed", icon: "✓" },
-                  { label: "Video Gait Analysis", status: "Analyzed", icon: "✓" },
-                ].map((img, i) => (
+                {imagingSources.map((src, i) => (
                   <motion.div
-                    key={img.label}
-                    className="flex items-center justify-between bg-cartan-mid-navy/30 border border-cartan-mid-navy/50 rounded-lg px-3 py-2"
+                    key={src.id}
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 + i * 0.12, duration: 0.3 }}
                     viewport={{ once: true }}
                   >
-                    <span className="text-xs text-cartan-white/70">{img.label}</span>
-                    <span className="text-[10px] font-mono text-cartan-teal">{img.icon} {img.status}</span>
+                    <button
+                      onClick={() => setExpandedSource(expandedSource === src.id ? null : src.id)}
+                      className={`w-full text-left rounded-lg px-3 py-2.5 transition-all border ${
+                        expandedSource === src.id
+                          ? "bg-cartan-teal/10 border-cartan-teal/30"
+                          : "bg-cartan-mid-navy/30 border-cartan-mid-navy/50 hover:border-cartan-teal/20"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-cartan-white/80">{src.label}</span>
+                        <span className="text-[10px] font-mono text-cartan-teal">
+                          ✓ {src.status.split("·")[0].trim()}
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-cartan-gray-blue mt-0.5">
+                        {src.status}
+                      </div>
+                    </button>
+
+                    <AnimatePresence>
+                      {expandedSource === src.id && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-3 py-2 mt-1 bg-cartan-dark/80 rounded-lg border border-cartan-mid-navy/30">
+                            <p className="text-[10px] text-cartan-white/60 leading-relaxed mb-2">
+                              {src.detail}
+                            </p>
+                            {src.preview && (
+                              <div className="relative rounded overflow-hidden border border-cartan-mid-navy/40">
+                                <Image
+                                  src={src.preview}
+                                  alt={src.previewLabel || ""}
+                                  width={300}
+                                  height={300}
+                                  className="w-full h-auto opacity-80"
+                                />
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-cartan-dark/90 to-transparent px-2 py-1.5">
+                                  <span className="text-[9px] font-mono text-cartan-teal/80">
+                                    {src.previewLabel}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 ))}
               </div>
@@ -145,16 +231,16 @@ export default function DigitalTwinScene() {
 
             <div className="space-y-4 flex-1">
               <AgentMessage
-                message="Segmentation complete. Kellgren-Lawrence Grade III confirmed. ACL/PCL intact on MRI — patient is BCR-eligible."
-                delay={0.8}
+                message="Ingesting 251 CT slices (0.6mm) + 192 MRI slices (1.5T sagittal). Running MONAI segmentation pipeline…"
+                delay={0.6}
               />
               <AgentMessage
-                message="Four-bar linkage model calibrated. ACL tension: 142N, PCL: 118N. Estimating stress-strain curves from laximetry data…"
-                delay={1.8}
+                message="Segmentation complete. 7 anatomical structures meshed (femur, tibia, fibula, patella × bone + cartilage). ACL/PCL intact — specimen is BCR-eligible."
+                delay={1.6}
               />
               <AgentMessage
-                message="Implant sizing: Femoral 4 / Tibial 3. Medial tibial slope: 5°. Confidence: 94.2%. Digital twin ready for simulation."
-                delay={2.8}
+                message="Calibrating four-bar linkage from 16 probed attachment sites. Integrating 9,101 kinematics data points (extension + laxity). Digital twin ready for simulation."
+                delay={2.6}
               />
             </div>
 
@@ -168,8 +254,10 @@ export default function DigitalTwinScene() {
             >
               <div className="text-[10px] text-cartan-gray-blue uppercase tracking-wider mb-2">Processing Summary</div>
               {[
-                { label: "Imaging sources", value: "4" },
-                { label: "Mesh elements", value: "284,192" },
+                { label: "Imaging slices", value: "443" },
+                { label: "Mesh triangles", value: "52,704" },
+                { label: "Attachment sites", value: "16" },
+                { label: "Kinematic data pts", value: "9,101" },
                 { label: "Parameters estimated", value: "47" },
                 { label: "Processing time", value: "2.4 min" },
               ].map((item) => (
