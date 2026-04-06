@@ -181,9 +181,29 @@ export default function DigitalTwinAssembly() {
     collaterals: true,
   });
   const containerRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const lastX = useRef(0);
 
   const toggleLayer = useCallback((key: keyof typeof layers) => {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
+  }, []);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    isDragging.current = true;
+    lastX.current = e.clientX;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  }, []);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isDragging.current) return;
+    const dx = e.clientX - lastX.current;
+    lastX.current = e.clientX;
+    setManualRotation((prev) => prev + dx * 0.01);
+    if (autoRotate) setAutoRotate(false);
+  }, [autoRotate]);
+
+  const handlePointerUp = useCallback(() => {
+    isDragging.current = false;
   }, []);
 
   // Load ligament attachment points
@@ -258,8 +278,14 @@ export default function DigitalTwinAssembly() {
         )}
       </div>
 
-      {/* 3D Canvas */}
-      <div className="relative flex-1 min-h-0 rounded-lg overflow-hidden border border-cartan-mid-navy/30 bg-cartan-dark/80">
+      {/* 3D Canvas — drag to rotate */}
+      <div
+        className="relative flex-1 min-h-0 rounded-lg overflow-hidden border border-cartan-mid-navy/30 bg-cartan-dark/80 cursor-grab active:cursor-grabbing"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+      >
         {/* Grid overlay */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.03]"

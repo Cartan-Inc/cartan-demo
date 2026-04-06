@@ -12,7 +12,7 @@ const DigitalTwinAssembly = dynamic(() => import("../DigitalTwinAssembly"), { ss
 
 // Real specimen data from DU01
 const patientData = [
-  { label: "Specimen", value: "DU01" },
+  { label: "Specimen", value: "John Doe" },
   { label: "Sex", value: "Male" },
   { label: "Body Part", value: "Lower Extremity" },
   { label: "Ligament Status", value: "Intact (ACL/PCL)" },
