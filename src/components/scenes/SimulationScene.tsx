@@ -53,7 +53,7 @@ const surgeonParams = [
   { label: "Femoral Rotation", value: 3, unit: "° external", min: 0, max: 7 },
   { label: "Tibial Slope (Medial)", value: 5, unit: "°", min: 0, max: 10 },
   { label: "Tibial Slope (Lateral)", value: 3, unit: "°", min: 0, max: 10 },
-  { label: "Coronal Angle", value: 0, unit: "° (neutral)", min: -3, max: 3 },
+  { label: "Coronal Angle", value: -3, unit: "°", min: -5, max: 5 },
 ];
 
 export default function SimulationScene() {

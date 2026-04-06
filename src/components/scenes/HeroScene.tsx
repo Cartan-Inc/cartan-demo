@@ -26,7 +26,8 @@ export default function HeroScene() {
       <div className="absolute top-16 left-0 right-0 z-10 bg-amber-900/40 border-b border-amber-600/30 px-4 py-2 text-center text-[11px] text-amber-200/80 leading-relaxed">
         <strong>INVESTIGATIONAL DEVICE:</strong> The devices and technology described on this website
         have not been cleared or approved by the FDA. Their safety and effectiveness have not been
-        established. Not available for sale.
+        established. Not available for sale. All data, simulations, and clinical scenarios shown are
+        for illustrative purposes only and do not represent actual clinical outcomes.
       </div>
 
       {/* Content */}
