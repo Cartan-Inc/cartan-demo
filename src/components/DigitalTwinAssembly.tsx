@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import * as THREE from "three";
+import { DistalFemur, ProximalTibia } from "./KneeGeometry";
 
 /* ── colours ────────────────────────────────────────────── */
 const BONE = "#e0d4c5";
@@ -66,42 +67,7 @@ function LigamentTube({
   );
 }
 
-/* ── Animated bone component ────────────────────────────── */
-function AnimatedBone({
-  position,
-  args,
-  geoType,
-  visible,
-  color = BONE,
-}: {
-  position: [number, number, number];
-  args: number[];
-  geoType: "cylinder" | "sphere";
-  visible: boolean;
-  color?: string;
-}) {
-  const meshRef = useRef<THREE.Mesh>(null);
 
-  useFrame(() => {
-    if (!meshRef.current) return;
-    const mat = meshRef.current.material as THREE.MeshStandardMaterial;
-    const targetOpacity = visible ? 0.92 : 0;
-    mat.opacity += (targetOpacity - mat.opacity) * 0.06;
-    const targetScale = visible ? 1 : 0.7;
-    meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.06);
-  });
-
-  return (
-    <mesh ref={meshRef} position={position} scale={[0.7, 0.7, 0.7]}>
-      {geoType === "cylinder" ? (
-        <cylinderGeometry args={args as [number, number, number, number]} />
-      ) : (
-        <sphereGeometry args={args as [number, number, number]} />
-      )}
-      <meshStandardMaterial color={color} transparent opacity={0} roughness={0.5} metalness={0.1} />
-    </mesh>
-  );
-}
 
 /* ── Capsule shell ──────────────────────────────────────── */
 function CapsuleShell({ visible }: { visible: boolean }) {
@@ -115,8 +81,8 @@ function CapsuleShell({ visible }: { visible: boolean }) {
   });
 
   return (
-    <mesh ref={meshRef} position={[0, -0.1, 0]}>
-      <sphereGeometry args={[0.55, 16, 16]} />
+    <mesh ref={meshRef} position={[0, 0.0, 0]}>
+      <sphereGeometry args={[0.48, 20, 16]} />
       <meshStandardMaterial
         color={CAPSULE_COLOR}
         transparent
@@ -135,10 +101,10 @@ function QuadTendon({ visible }: { visible: boolean }) {
 
   const geometry = useMemo(() => {
     const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0, 1.2, 0.25),
-      new THREE.Vector3(0, 0.5, 0.3),
-      new THREE.Vector3(0, -0.05, 0.35),
-      new THREE.Vector3(0, -0.45, 0.2),
+      new THREE.Vector3(0, 1.0, 0.2),
+      new THREE.Vector3(0, 0.4, 0.25),
+      new THREE.Vector3(0, -0.05, 0.28),
+      new THREE.Vector3(0, -0.55, 0.18),
     ]);
     return new THREE.TubeGeometry(curve, 20, 0.04, 8, false);
   }, []);
@@ -210,29 +176,25 @@ function TwinScene({ stage }: { stage: number }) {
           {/* Scan line */}
           <ScanLine active={scanning} />
 
-          {/* Femur */}
-          <group position={[0, 0.8, 0]}>
-            <AnimatedBone position={[0, 0, 0]} args={[0.18, 0.22, 1.6, 16]} geoType="cylinder" visible={showBone} />
-            <AnimatedBone position={[-0.18, -0.85, 0]} args={[0.28, 16, 16]} geoType="sphere" visible={showBone} color={BONE_GLOW} />
-            <AnimatedBone position={[0.18, -0.85, 0]} args={[0.28, 16, 16]} geoType="sphere" visible={showBone} color={BONE_GLOW} />
+          {/* Distal Femur */}
+          <group position={[0, 0.55, 0]}>
+            <DistalFemur visible={showBone} />
           </group>
 
-          {/* Tibia */}
-          <group position={[0, -1.0, 0]}>
-            <AnimatedBone position={[0, 0.7, 0]} args={[0.32, 0.28, 0.2, 16]} geoType="cylinder" visible={showBone} color={BONE_GLOW} />
-            <AnimatedBone position={[0, 0.82, 0]} args={[0.08, 0.08, 0.08, 8]} geoType="cylinder" visible={showBone} color="#c9bba8" />
-            <AnimatedBone position={[0, 0, 0]} args={[0.2, 0.16, 1.4, 16]} geoType="cylinder" visible={showBone} />
+          {/* Proximal Tibia */}
+          <group position={[0, -0.45, 0]}>
+            <ProximalTibia visible={showBone} />
           </group>
 
-          {/* Cruciate ligaments */}
-          <LigamentTube start={[0.05, -0.1, 0.08]} end={[-0.05, -0.32, 0.05]} color={ACL_COLOR} visible={showLigaments} />
-          <LigamentTube start={[-0.05, -0.1, -0.08]} end={[0.05, -0.35, -0.05]} color={PCL_COLOR} visible={showLigaments} />
+          {/* Cruciate ligaments — positioned between condyles */}
+          <LigamentTube start={[0.03, 0.0, 0.06]} end={[-0.03, -0.42, 0.04]} color={ACL_COLOR} visible={showLigaments} />
+          <LigamentTube start={[-0.03, 0.0, -0.06]} end={[0.03, -0.44, -0.04]} color={PCL_COLOR} visible={showLigaments} />
 
-          {/* Collateral ligaments */}
-          <LigamentTube start={[-0.35, 0.0, 0]} end={[-0.28, -0.5, 0]} color={COLLATERAL_COLOR} visible={showLigaments} />
-          <LigamentTube start={[0.35, 0.0, 0]} end={[0.28, -0.5, 0]} color={COLLATERAL_COLOR} visible={showLigaments} />
+          {/* Collateral ligaments — medial and lateral */}
+          <LigamentTube start={[-0.22, 0.1, 0]} end={[-0.20, -0.52, 0]} color={COLLATERAL_COLOR} visible={showLigaments} />
+          <LigamentTube start={[0.22, 0.1, 0]} end={[0.20, -0.52, 0]} color={COLLATERAL_COLOR} visible={showLigaments} />
 
-          {/* Capsule */}
+          {/* Capsule — positioned around the joint */}
           <CapsuleShell visible={showCapsule} />
 
           {/* Extensor mechanism */}

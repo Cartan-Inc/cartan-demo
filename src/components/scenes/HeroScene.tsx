@@ -91,7 +91,7 @@ export default function HeroScene() {
         animate={{ opacity: 0.3 }}
         transition={{ delay: 1.5, duration: 1.5 }}
       >
-        <KneeModel showLigaments={true} showImplant={false} autoRotate={true} />
+        <KneeModel showLigaments={true} autoRotate={true} />
       </motion.div>
 
       {/* Scroll indicator */}
