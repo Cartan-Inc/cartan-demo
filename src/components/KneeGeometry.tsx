@@ -221,18 +221,18 @@ export function RealKneeAssembly({
             color={PCL_COLOR}
             visible={showLigaments}
           />
-          {/* MCL: medial epicondyle → curves around medial tibial surface → inserts distally */}
+          {/* MCL: medial epicondyle → curves medially around tibial surface → inserts distally */}
           <LigamentFromPoints
             femPoints={ligamentData.MCL_Fem || []}
             tibPoints={ligamentData.MCL_Tib || []}
             color={MCL_COLOR}
             visible={showLigaments}
-            proximalOverride={[0.58, 0.20, -0.14]}
+            proximalOverride={[0.56, 0.18, -0.13]}
             waypoints={[
-              [0.56, 0.05, -0.10],
-              [0.52, -0.08, -0.08],
-              [0.51, -0.20, -0.12],
-              [0.49, -0.35, -0.16],
+              [0.58, 0.02, -0.15],
+              [0.54, -0.10, -0.17],
+              [0.52, -0.22, -0.18],
+              [0.50, -0.35, -0.19],
             ]}
             distalOverride={[0.44, -0.50, -0.19]}
             radius={0.016}
@@ -243,7 +243,7 @@ export function RealKneeAssembly({
             tibPoints={ligamentData.LCL_Tib || []}
             color={LCL_COLOR}
             visible={showLigaments}
-            proximalOverride={[-0.54, 0.18, -0.17]}
+            proximalOverride={[-0.56, 0.19, -0.15]}
             distalOverride={[-0.50, -0.48, -0.36]}
           />
         </>
