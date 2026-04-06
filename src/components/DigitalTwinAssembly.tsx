@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import * as THREE from "three";
@@ -40,24 +40,56 @@ function ScanLine({ active }: { active: boolean }) {
   );
 }
 
-/* ── Rotating scene with staged reveals ─────────────────── */
+/* ── Rotating scene with manual + auto rotation ─────────── */
 function TwinScene({
   stage,
   ligamentData,
+  manualRotation,
+  autoRotate,
+  layers,
 }: {
   stage: number;
   ligamentData: Record<string, number[][]> | null;
+  manualRotation: number;
+  autoRotate: boolean;
+  layers: { bone: boolean; cartilage: boolean; cruciates: boolean; collaterals: boolean };
 }) {
   const groupRef = useRef<THREE.Group>(null);
 
-  const showBone = stage >= 1;
-  const showCartilage = stage >= 2;
+  const showBone = stage >= 1 && layers.bone;
+  const showCartilage = stage >= 2 && layers.cartilage;
   const showLigaments = stage >= 3;
   const scanning = stage === 0;
 
+  // Filter ligament data based on toggles
+  const filteredLigaments = ligamentData
+    ? {
+        ...(layers.cruciates
+          ? {
+              ACL_Fem: ligamentData.ACL_Fem,
+              ACL_Tib: ligamentData.ACL_Tib,
+              PCL_Fem: ligamentData.PCL_Fem,
+              PCL_Tib: ligamentData.PCL_Tib,
+            }
+          : {}),
+        ...(layers.collaterals
+          ? {
+              MCL_Fem: ligamentData.MCL_Fem,
+              MCL_Tib: ligamentData.MCL_Tib,
+              LCL_Fem: ligamentData.LCL_Fem,
+              LCL_Tib: ligamentData.LCL_Tib,
+            }
+          : {}),
+      }
+    : undefined;
+
   useFrame((state) => {
     if (!groupRef.current) return;
-    groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.25) * 0.5;
+    if (autoRotate) {
+      groupRef.current.rotation.y = manualRotation + Math.sin(state.clock.elapsedTime * 0.25) * 0.5;
+    } else {
+      groupRef.current.rotation.y = manualRotation;
+    }
   });
 
   return (
@@ -74,7 +106,7 @@ function TwinScene({
             showBone={showBone}
             showCartilage={showCartilage}
             showLigaments={showLigaments}
-            ligamentData={ligamentData || undefined}
+            ligamentData={filteredLigaments}
           />
         </group>
       </Float>
@@ -118,7 +150,19 @@ export default function DigitalTwinAssembly() {
   const [stage, setStage] = useState(-1);
   const [inView, setInView] = useState(false);
   const [ligamentData, setLigamentData] = useState<Record<string, number[][]> | null>(null);
+  const [manualRotation, setManualRotation] = useState(0);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const [layers, setLayers] = useState({
+    bone: true,
+    cartilage: true,
+    cruciates: true,
+    collaterals: true,
+  });
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const toggleLayer = useCallback((key: keyof typeof layers) => {
+    setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
+  }, []);
 
   // Load ligament attachment points
   useEffect(() => {
@@ -156,9 +200,10 @@ export default function DigitalTwinAssembly() {
 
   const currentStage = stage >= 0 && stage < STAGES.length ? STAGES[stage] : null;
   const progress = Math.min(((stage + 1) / (STAGES.length - 1)) * 100, 100);
+  const assemblyComplete = stage >= STAGES.length - 1;
 
   return (
-    <div ref={containerRef} className="relative w-full h-full min-h-[380px] flex flex-col">
+    <div ref={containerRef} className="relative w-full h-full min-h-[420px] flex flex-col">
       <h3 className="text-sm text-cartan-teal font-mono uppercase tracking-wider mb-2">
         Digital Twin Assembly
       </h3>
@@ -172,7 +217,7 @@ export default function DigitalTwinAssembly() {
       </div>
 
       {/* Status */}
-      <div className="flex items-center gap-2 mb-3 h-5">
+      <div className="flex items-center gap-2 mb-2 h-5">
         {currentStage && currentStage.id !== "complete" && (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-cartan-teal animate-pulse" />
@@ -185,7 +230,7 @@ export default function DigitalTwinAssembly() {
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
             <span className="text-[11px] font-mono text-green-400">
-              ✓ Digital twin ready — real cadaveric anatomy
+              ✓ Digital twin ready — John Doe
             </span>
           </>
         )}
@@ -208,7 +253,13 @@ export default function DigitalTwinAssembly() {
           gl={{ antialias: true, alpha: true }}
           style={{ background: "transparent" }}
         >
-          <TwinScene stage={stage} ligamentData={ligamentData} />
+          <TwinScene
+            stage={stage}
+            ligamentData={ligamentData}
+            manualRotation={manualRotation}
+            autoRotate={autoRotate}
+            layers={layers}
+          />
         </Canvas>
 
         <DataReadout stage={stage} />
@@ -220,27 +271,80 @@ export default function DigitalTwinAssembly() {
           POSTERIOR
         </div>
         <div className="absolute bottom-2 right-2 text-[8px] font-mono text-cartan-gray-blue/30">
-          Cadaveric specimen DU01
+          Specimen John Doe
         </div>
       </div>
 
-      {/* Layer legend */}
-      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mt-3">
+      {/* Rotation slider */}
+      {assemblyComplete && (
+        <div className="mt-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] text-cartan-gray-blue">Rotation</span>
+            <button
+              onClick={() => setAutoRotate(!autoRotate)}
+              className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
+                autoRotate
+                  ? "text-cartan-teal border-cartan-teal/30 bg-cartan-teal/10"
+                  : "text-cartan-gray-blue border-cartan-mid-navy"
+              }`}
+            >
+              {autoRotate ? "Auto ✓" : "Manual"}
+            </button>
+          </div>
+          <input
+            type="range"
+            min={-Math.PI}
+            max={Math.PI}
+            step={0.01}
+            value={manualRotation}
+            onChange={(e) => {
+              setManualRotation(parseFloat(e.target.value));
+              if (autoRotate) setAutoRotate(false);
+            }}
+            className="w-full h-1 bg-cartan-mid-navy rounded-full appearance-none cursor-pointer
+              [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
+              [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cartan-teal
+              [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(74,140,126,0.4)]"
+          />
+          <div className="flex justify-between text-[9px] text-cartan-gray-blue/50 mt-0.5">
+            <span>−180°</span>
+            <span>{((manualRotation * 180) / Math.PI).toFixed(0)}°</span>
+            <span>+180°</span>
+          </div>
+        </div>
+      )}
+
+      {/* Layer toggles */}
+      <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 mt-3">
         {[
-          { label: "Cortical Bone", color: "bg-[#e8ddd0]", show: stage >= 1 },
-          { label: "Articular Cartilage", color: "bg-[#c0d4da]", show: stage >= 2 },
-          { label: "ACL / PCL", color: "bg-cartan-teal", show: stage >= 3 },
-          { label: "MCL / LCL", color: "bg-cartan-light-blue", show: stage >= 3 },
+          { key: "bone" as const, label: "Cortical Bone", color: "bg-[#e8ddd0]", show: stage >= 1 },
+          { key: "cartilage" as const, label: "Articular Cartilage", color: "bg-[#c0d4da]", show: stage >= 2 },
+          { key: "cruciates" as const, label: "ACL / PCL", color: "bg-cartan-teal", show: stage >= 3 },
+          { key: "collaterals" as const, label: "MCL / LCL", color: "bg-cartan-light-blue", show: stage >= 3 },
         ].map((item) => (
-          <div
-            key={item.label}
-            className={`flex items-center gap-1.5 transition-all duration-500 ${
-              item.show ? "opacity-100" : "opacity-20"
+          <button
+            key={item.key}
+            onClick={() => item.show && toggleLayer(item.key)}
+            disabled={!item.show}
+            className={`flex items-center gap-1.5 transition-all duration-300 text-left ${
+              !item.show ? "opacity-20 cursor-default" : "cursor-pointer hover:opacity-90"
             }`}
           >
-            <div className={`w-2 h-2 rounded-sm ${item.color}`} />
-            <span className="text-[10px] text-cartan-white/70">{item.label}</span>
-          </div>
+            <div
+              className={`w-3 h-3 rounded-sm border transition-all ${
+                item.show && layers[item.key]
+                  ? `${item.color} border-white/20`
+                  : "bg-transparent border-cartan-gray-blue/40"
+              }`}
+            />
+            <span
+              className={`text-[10px] transition-all ${
+                item.show && layers[item.key] ? "text-cartan-white/80" : "text-cartan-gray-blue/50"
+              }`}
+            >
+              {item.label}
+            </span>
+          </button>
         ))}
       </div>
     </div>
