@@ -259,14 +259,13 @@ export function RealKneeAssembly({
               [0.56, -0.24, -0.20],   // bone 0.496
               [0.55, -0.27, -0.20],   // bone 0.486
               [0.54, -0.30, -0.20],   // bone 0.480
-              [0.54, -0.33, -0.20],   // bone 0.475
-              [0.53, -0.36, -0.20],   // bone 0.468
-              [0.52, -0.39, -0.20],   // bone 0.459
-              [0.51, -0.42, -0.21],   // bone 0.451
-              [0.49, -0.45, -0.21],   // bone 0.433
-              [0.47, -0.48, -0.20],   // bone 0.406
+              [0.54, -0.33, -0.20],   // bone 0.475 ← midpoint, start curving inward
+              [0.52, -0.36, -0.20],   // transitioning inward
+              [0.49, -0.39, -0.20],   // crossing bone surface (0.459)
+              [0.45, -0.42, -0.20],   // inside bone (surface 0.451)
+              [0.41, -0.45, -0.20],   // inside bone (surface 0.433)
             ]}
-            distalOverride={[0.43, -0.51, -0.20]}
+            distalOverride={[0.37, -0.48, -0.20]}
             radius={0.014}
           />
           {/* LCL: lateral epicondyle → fibular head
