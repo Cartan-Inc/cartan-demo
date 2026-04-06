@@ -68,11 +68,11 @@ export default function ProblemScene() {
               viewport={{ once: true }}
             >
               <p className="text-cartan-white/70 italic text-sm leading-relaxed">
-                &ldquo;Over thousands of cases, expert surgeons develop an intuition for
-                balancing a bicruciate knee. But the vast majority of surgeons will never
-                perform enough BCR procedures to achieve that level of mastery — and their
-                patients will never benefit from the best possible outcome.&rdquo;
+                &ldquo;What one must understand is that any releases done in extension,
+                on either the medial or lateral side of the knee, can have an unpredictable
+                effect on the flexion space.&rdquo;
               </p>
+              <p className="text-cartan-white/50 text-xs mt-1">— Orthopedic surgeon on the challenge of soft-tissue balancing in TKA</p>
             </motion.blockquote>
           </motion.div>
 
