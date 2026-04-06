@@ -143,7 +143,7 @@ function DataReadout({ stage }: { stage: number }) {
   if (visibleReadouts.length === 0) return null;
 
   return (
-    <div className="absolute bottom-2 right-2 bg-cartan-dark/90 backdrop-blur-sm border border-cartan-mid-navy/50 rounded-lg px-3 py-2 pointer-events-none">
+    <div className="hidden md:block absolute bottom-2 right-2 bg-cartan-dark/90 backdrop-blur-sm border border-cartan-mid-navy/50 rounded-lg px-3 py-2 pointer-events-none">
       <div className="text-[8px] text-cartan-gray-blue/60 uppercase tracking-wider mb-1.5">Parameters</div>
       <div className="space-y-1">
         {readouts.map((r, i) => (
