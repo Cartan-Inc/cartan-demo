@@ -93,8 +93,8 @@ export default function SimulationScene() {
           transition={{ delay: 0.2, duration: 0.6 }}
           viewport={{ once: true }}
         >
-          The AI stack simulates the post-operative knee performing daily activities across
-          a 50-year horizon — predicting wear, stress, and failure modes before the first incision.
+          The AI stack is designed to simulate the post-operative knee across
+          a 50-year horizon — exploring wear, stress, and failure modes before the first incision.
         </motion.p>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -157,13 +157,13 @@ export default function SimulationScene() {
             <div className="bg-cartan-navy/40 rounded-xl p-6 mb-6">
               <div className="flex items-end gap-4 mb-4">
                 <div>
-                  <div className="text-xs text-cartan-gray-blue mb-1">Predicted Survivorship</div>
+                  <div className="text-xs text-cartan-gray-blue mb-1">Simulated Survivorship</div>
                   <div className="text-4xl font-bold text-cartan-teal font-mono">
                     {survivorship.toFixed(1)}%
                   </div>
                 </div>
                 <div className="text-xs text-cartan-gray-blue mb-2">
-                  at {years} years post-op ({implantType.toUpperCase()})
+                  at {years} years ({implantType.toUpperCase()}) — illustrative
                 </div>
               </div>
 
@@ -178,7 +178,7 @@ export default function SimulationScene() {
               </div>
               <div className="flex justify-between mt-1">
                 <span className="text-[10px] text-cartan-gray-blue">0%</span>
-                <span className="text-[10px] text-cartan-gray-blue">Confidence interval: ±{(1.2 + years * 0.04).toFixed(1)}%</span>
+                <span className="text-[10px] text-cartan-gray-blue/60 italic">Simulated data for demonstration purposes only</span>
                 <span className="text-[10px] text-cartan-gray-blue">100%</span>
               </div>
             </div>

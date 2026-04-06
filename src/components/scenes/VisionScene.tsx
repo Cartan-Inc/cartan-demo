@@ -5,15 +5,15 @@ import SceneWrapper from "../SceneWrapper";
 import ToolingBadge from "../ToolingBadge";
 
 const roadmap = [
-  { year: "2029", product: "BCR Knee", status: "First product launch", active: true },
-  { year: "2030", product: "CR & UC Knee", status: "Platform expansion", active: false },
-  { year: "2032+", product: "THA · TSA · TAA", status: "Multi-joint platform", active: false },
+  { year: "Phase 1", product: "BCR Knee", status: "Initial platform", active: true },
+  { year: "Phase 2", product: "CR & UC Knee", status: "Platform expansion", active: false },
+  { year: "Phase 3", product: "THA · TSA · TAA", status: "Multi-joint platform", active: false },
 ];
 
 const networkStats = [
   { value: "Every", label: "Patient gets a digital twin" },
-  { value: "50yr", label: "Simulated per patient" },
-  { value: "98.1%", label: "Predicted survivorship" },
+  { value: "Pre-op", label: "Simulation before surgery" },
+  { value: "50yr", label: "Simulation horizon" },
   { value: "∞", label: "Continuous learning" },
 ];
 
@@ -216,8 +216,12 @@ export default function VisionScene() {
           <p className="text-xs text-cartan-gray-blue">
             © {new Date().getFullYear()} Cartan Inc. All rights reserved.
           </p>
-          <p className="text-[10px] text-cartan-gray-blue/60 mt-2">
-            This is a technology demonstration. Not a medical device or clinical tool.
+          <p className="text-[10px] text-cartan-gray-blue/60 mt-2 max-w-2xl mx-auto leading-relaxed">
+            CAUTION: The devices and software described herein have not been cleared or approved by the
+            U.S. Food and Drug Administration (FDA). The safety and effectiveness of these devices have
+            not been established. They are not available for sale or commercial distribution. All data,
+            simulations, and clinical scenarios shown are for illustrative purposes only and do not
+            represent actual clinical outcomes.
           </p>
         </motion.footer>
       </div>

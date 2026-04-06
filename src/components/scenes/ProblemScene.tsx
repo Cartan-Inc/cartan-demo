@@ -113,26 +113,29 @@ export default function ProblemScene() {
             <div className="bg-cartan-teal/5 border border-cartan-teal/20 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-3 h-3 rounded-full bg-cartan-teal" />
-                <h3 className="text-lg font-semibold text-cartan-white">BCR with Cartan</h3>
+                <h3 className="text-lg font-semibold text-cartan-white">What Cartan Is Building</h3>
               </div>
               <ul className="space-y-2 text-sm text-cartan-white/80">
                 <li className="flex items-start gap-2">
-                  <span className="text-cartan-teal mt-0.5">✓</span>
-                  Both ACL and PCL preserved
+                  <span className="text-cartan-teal mt-0.5">→</span>
+                  Preserving both ACL and PCL as the design goal
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-cartan-teal mt-0.5">✓</span>
-                  AI-guided hybrid technique adapts to each patient
+                  <span className="text-cartan-teal mt-0.5">→</span>
+                  AI-guided planning adapted to individual anatomy
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-cartan-teal mt-0.5">✓</span>
-                  Smart instruments provide real-time feedback
+                  <span className="text-cartan-teal mt-0.5">→</span>
+                  Instrumented feedback during the procedure
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-cartan-teal mt-0.5">✓</span>
-                  Expert-level outcomes accessible to every surgeon
+                  <span className="text-cartan-teal mt-0.5">→</span>
+                  Designed to make BCR accessible to more surgeons
                 </li>
               </ul>
+              <p className="text-[10px] text-cartan-gray-blue/60 mt-3 italic">
+                Investigational concept — not cleared by FDA
+              </p>
             </div>
           </motion.div>
         </div>

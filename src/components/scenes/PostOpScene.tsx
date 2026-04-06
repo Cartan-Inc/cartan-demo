@@ -44,7 +44,7 @@ export default function PostOpScene() {
           transition={{ delay: 0.2, duration: 0.6 }}
           viewport={{ once: true }}
         >
-          After surgery, AI agents continue working — collecting outcomes,
+          After surgery, AI agents are designed to continue working — collecting outcomes,
           monitoring for complications, generating PT protocols, and feeding real-world
           data back into the digital twin.
         </motion.p>
@@ -120,12 +120,15 @@ export default function PostOpScene() {
             >
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-cartan-teal text-sm">📊</span>
-                <span className="text-xs text-cartan-teal font-mono">DIGITAL TWIN VALIDATION</span>
+                <span className="text-xs text-cartan-teal font-mono">DIGITAL TWIN FEEDBACK</span>
               </div>
               <p className="text-xs text-cartan-white/70 leading-relaxed">
-                6-month post-op data integrated into digital twin. Predicted vs actual ROM deviation: 2.3°.
-                Predicted vs actual FJS-12 deviation: 4.1 points.
-                <span className="text-cartan-teal"> Model accuracy improving with each case.</span>
+                Post-op data feeds back into the digital twin, enabling comparison between
+                simulated and actual outcomes.
+                <span className="text-cartan-teal"> Designed to improve with each case.</span>
+              </p>
+              <p className="text-[9px] text-cartan-gray-blue/50 mt-1 italic">
+                Illustrative data shown for demonstration purposes
               </p>
             </motion.div>
           </motion.div>
