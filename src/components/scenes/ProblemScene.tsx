@@ -68,11 +68,10 @@ export default function ProblemScene() {
               viewport={{ once: true }}
             >
               <p className="text-cartan-white/70 italic text-sm leading-relaxed">
-                &ldquo;What one must understand is that any releases done in extension,
-                on either the medial or lateral side of the knee, can have an unpredictable
-                effect on the flexion space.&rdquo;
+                &ldquo;Optimal ligament balancing for an ACL- and PCL-preserved knee
+                has yet to be defined.&rdquo;
               </p>
-              <p className="text-cartan-white/50 text-xs mt-1">— Orthopedic surgeon on the challenge of soft-tissue balancing in TKA</p>
+              <p className="text-cartan-white/50 text-xs mt-1">— De Windt et al., <em>Applied Sciences</em>, 2022</p>
             </motion.blockquote>
           </motion.div>
 

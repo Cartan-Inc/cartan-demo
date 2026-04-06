@@ -214,7 +214,7 @@ export default function VisionScene() {
           viewport={{ once: true }}
         >
           <p className="text-xs text-cartan-gray-blue">
-            © {new Date().getFullYear()} Cartan Inc.. All rights reserved.
+            © {new Date().getFullYear()} Cartan Inc. All rights reserved.
           </p>
           <p className="text-[10px] text-cartan-gray-blue/60 mt-2">
             This is a technology demonstration. Not a medical device or clinical tool.
