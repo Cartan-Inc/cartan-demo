@@ -124,10 +124,12 @@ export default function VisionScene() {
           </div>
         </motion.div>
 
-        <ToolingBadge
-          tools={["NVIDIA PhysicsNeMo", "PINNs", "NVIDIA Cosmos", "MONAI", "Federated Learning", "JAX", "Edge AI"]}
-          delay={1.0}
-        />
+        <div className="-mt-8 mb-12">
+          <ToolingBadge
+            tools={["NVIDIA PhysicsNeMo", "PINNs", "NVIDIA Cosmos", "MONAI", "Federated Learning", "JAX", "Edge AI"]}
+            delay={1.0}
+          />
+        </div>
 
         {/* Product Roadmap */}
         <motion.div
