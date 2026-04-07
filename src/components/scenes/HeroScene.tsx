@@ -1,12 +1,22 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
+import { useRef } from "react";
 
 
 export default function HeroScene() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  // Fade out disclaimer as user scrolls past ~30% of hero
+  const disclaimerOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
   return (
     <section
+      ref={sectionRef}
       id="hero"
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
@@ -22,13 +32,16 @@ export default function HeroScene() {
         <div className="absolute inset-0 bg-gradient-to-b from-cartan-dark/60 via-cartan-dark/40 to-cartan-dark" />
       </div>
 
-      {/* FDA Disclaimer - below nav */}
-      <div className="absolute top-14 md:top-16 left-0 right-0 z-10 bg-amber-900/40 border-b border-amber-600/30 px-4 py-1.5 md:py-2 text-center text-[10px] md:text-[11px] text-amber-200/80 leading-relaxed">
-        <strong>INVESTIGATIONAL DEVICE:</strong> The devices and technology described on this website
+      {/* FDA Disclaimer - bottom of hero, dark blue theme, fades on scroll */}
+      <motion.div
+        style={{ opacity: disclaimerOpacity }}
+        className="absolute bottom-0 left-0 right-0 z-10 bg-cartan-dark/90 border-t border-cartan-gray-blue/20 px-6 py-2.5 md:py-3 text-center text-[10px] md:text-[11px] text-white/70 leading-relaxed pointer-events-none"
+      >
+        <strong className="text-white/90">INVESTIGATIONAL DEVICE:</strong> The devices and technology described on this website
         have not been cleared or approved by the FDA. Their safety and effectiveness have not been
         established. Not available for sale. All data, simulations, and clinical scenarios shown are
         for illustrative purposes only and do not represent actual clinical outcomes.
-      </div>
+      </motion.div>
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl px-6">
