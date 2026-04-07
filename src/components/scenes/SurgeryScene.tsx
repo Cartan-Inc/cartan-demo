@@ -289,7 +289,7 @@ export default function SurgeryScene() {
 
             <div className="space-y-4">
               <AgentMessage
-                message="Step 3/6: Distal femoral cut. Adjust jig 1.2° external rotation based on intraop condylar measurements."
+                message="Step 3/6: Distal femoral cut. Adjust jig 1.5° external rotation based on intraop condylar measurements."
                 delay={0.6}
               />
               <AgentMessage
