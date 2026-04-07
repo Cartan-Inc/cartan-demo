@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import SceneWrapper from "../SceneWrapper";
 
 const stats = [
@@ -115,24 +116,48 @@ export default function ProblemScene() {
                 <div className="w-3 h-3 rounded-full bg-cartan-teal" />
                 <h3 className="text-lg font-semibold text-cartan-white">What Cartan Is Building</h3>
               </div>
-              <ul className="space-y-2 text-sm text-cartan-white/80">
-                <li className="flex items-start gap-2">
-                  <span className="text-cartan-teal mt-0.5">→</span>
-                  Preserving both ACL and PCL as the design goal
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-cartan-teal mt-0.5">→</span>
-                  AI-guided planning adapted to individual anatomy
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-cartan-teal mt-0.5">→</span>
-                  Instrumented feedback during the procedure
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-cartan-teal mt-0.5">→</span>
-                  Designed to make BCR accessible to more surgeons
-                </li>
-              </ul>
+              <div className="flex gap-5">
+                {/* Implant concept image */}
+                <div className="hidden md:flex flex-shrink-0 items-center">
+                  <div className="relative w-36 h-44 rounded-lg overflow-hidden bg-white/5 border border-cartan-gray-blue/10">
+                    <Image
+                      src="/implant-concept.png"
+                      alt="Cartan BCR Implant Concept"
+                      fill
+                      className="object-contain p-2"
+                    />
+                  </div>
+                </div>
+                <ul className="space-y-2 text-sm text-cartan-white/80">
+                  <li className="flex items-start gap-2">
+                    <span className="text-cartan-teal mt-0.5">→</span>
+                    Preserving both ACL and PCL as the design goal
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-cartan-teal mt-0.5">→</span>
+                    AI-guided planning adapted to individual anatomy
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-cartan-teal mt-0.5">→</span>
+                    Instrumented feedback during the procedure
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-cartan-teal mt-0.5">→</span>
+                    Designed to make BCR accessible to more surgeons
+                  </li>
+                </ul>
+              </div>
+              {/* Mobile: show image below list */}
+              <div className="flex md:hidden justify-center mt-4">
+                <div className="relative w-40 h-48 rounded-lg overflow-hidden bg-white/5 border border-cartan-gray-blue/10">
+                  <Image
+                    src="/implant-concept.png"
+                    alt="Cartan BCR Implant Concept"
+                    fill
+                    className="object-contain p-2"
+                  />
+                </div>
+              </div>
               <p className="text-[10px] text-cartan-gray-blue/60 mt-3 italic">
                 Investigational concept — not cleared by FDA
               </p>
