@@ -37,7 +37,7 @@ export default function HeroScene() {
         style={{ opacity: disclaimerOpacity }}
         className="absolute bottom-0 left-0 right-0 z-10 bg-cartan-dark/90 border-t border-cartan-gray-blue/20 px-6 py-2.5 md:py-3 text-center text-[10px] md:text-[11px] text-white/70 leading-relaxed pointer-events-none"
       >
-        <strong className="text-white/90">INVESTIGATIONAL DEVICE:</strong> The devices and technology described on this website
+        The devices and technology described on this website
         have not been cleared or approved by the FDA. Their safety and effectiveness have not been
         established. Not available for sale. All data, simulations, and clinical scenarios shown are
         for illustrative purposes only and do not represent actual clinical outcomes.

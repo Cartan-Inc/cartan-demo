@@ -37,9 +37,8 @@ export default function VisionScene() {
           transition={{ delay: 0.1, duration: 0.6 }}
           viewport={{ once: true }}
         >
-          Every procedure makes every
-          <br />
-          <span className="text-cartan-teal">future procedure better.</span>
+          <span className="inline md:hidden">Every procedure makes{" "}<span className="text-cartan-teal">every future procedure better.</span></span>
+          <span className="hidden md:inline">Every procedure makes every<br /><span className="text-cartan-teal">future procedure better.</span></span>
         </motion.h2>
 
         <motion.p
@@ -125,6 +124,11 @@ export default function VisionScene() {
           </div>
         </motion.div>
 
+        <ToolingBadge
+          tools={["NVIDIA PhysicsNeMo", "PINNs", "NVIDIA Cosmos", "MONAI", "Federated Learning", "JAX", "Edge AI"]}
+          delay={1.0}
+        />
+
         {/* Product Roadmap */}
         <motion.div
           className="mb-16"
@@ -199,11 +203,6 @@ export default function VisionScene() {
             </a>
           </div>
         </motion.div>
-
-        <ToolingBadge
-          tools={["NVIDIA PhysicsNeMo", "PINNs", "NVIDIA Cosmos", "MONAI", "Federated Learning", "JAX", "Edge AI"]}
-          delay={1.0}
-        />
 
         {/* Footer */}
         <motion.footer
