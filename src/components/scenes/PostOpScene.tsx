@@ -6,12 +6,12 @@ import AgentMessage from "../AgentMessage";
 import ToolingBadge from "../ToolingBadge";
 
 const timelinePoints = [
-  { time: "2 weeks", fjs: 42, rom: "5°–95°", status: "Early recovery" },
+  { time: "1 week", fjs: 30, rom: "10°–85°", status: "Initial recovery" },
+  { time: "3 weeks", fjs: 45, rom: "5°–95°", status: "Early mobilization" },
   { time: "6 weeks", fjs: 58, rom: "2°–108°", status: "PT progression" },
-  { time: "3 months", fjs: 71, rom: "0°–118°", status: "Return to activity" },
-  { time: "6 months", fjs: 82, rom: "0°–125°", status: "Near full recovery" },
-  { time: "1 year", fjs: 89, rom: "0°–130°", status: "Optimal" },
-  { time: "2 years", fjs: 93, rom: "0°–132°", status: "Steady state" },
+  { time: "3 months", fjs: 74, rom: "0°–120°", status: "Return to activity" },
+  { time: "6 months", fjs: 85, rom: "0°–128°", status: "Near full recovery" },
+  { time: "1 year", fjs: 93, rom: "0°–132°", status: "Optimal" },
 ];
 
 export default function PostOpScene() {
@@ -177,12 +177,12 @@ export default function PostOpScene() {
               </h3>
               <div className="space-y-3">
                 <AgentMessage
-                  message="PT protocol generated: Phase 2 progression. Focus on closed-chain quad strengthening. ROM target: 0°–120° by week 8."
+                  message="PT protocol generated: Phase 2 progression. Focus on closed-chain quad strengthening. ROM target: 0°–120° by 3 months."
                   delay={1.0}
                   typing={false}
                 />
                 <AgentMessage
-                  message="Patient reported FJS-12: 82 at 6 months. Tracking above 75th percentile for BCR cohort."
+                  message="Patient reported FJS-12: 85 at 6 months. Tracking above 75th percentile for BCR cohort."
                   delay={1.4}
                   typing={false}
                 />
