@@ -159,7 +159,7 @@ export default function ProblemScene() {
                 </div>
               </div>
               <p className="text-[10px] text-cartan-gray-blue/60 mt-3 italic">
-                Investigational concept — not cleared by FDA
+                Design concept — not cleared by FDA
               </p>
             </div>
           </motion.div>
