@@ -83,7 +83,7 @@ export default function SimulationScene() {
           transition={{ delay: 0.1, duration: 0.6 }}
           viewport={{ once: true }}
         >
-          50-Year Simulation
+          30-Year Simulation
         </motion.h2>
 
         <motion.p

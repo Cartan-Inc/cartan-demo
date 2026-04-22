@@ -13,7 +13,7 @@ const roadmap = [
 const networkStats = [
   { value: "Every", label: "Patient gets a digital twin" },
   { value: "Pre-op", label: "Simulation before surgery" },
-  { value: "50yr", label: "Simulation horizon" },
+  { value: "30yr", label: "Simulation horizon" },
   { value: "∞", label: "Continuous learning" },
 ];
 
